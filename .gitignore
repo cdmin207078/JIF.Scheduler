@@ -1,11 +1,19 @@
-﻿#过滤的文件
+﻿# 过滤的文件
 *.suo
 
-#过滤文件夹Debug,Release,obj
+# 过滤文件夹Debug,Release,obj
 bin/
 Debug/
 Release/
-obj/
+obj/*
 packages/
 .vs/
 .vscode/
+
+# compiled files
+obj
+bin
+
+# user files
+.user
+.suo
