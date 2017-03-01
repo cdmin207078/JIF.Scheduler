@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
+using JIF.Scheduler.Core.Log;
 using NLog;
 
 namespace JIF.Scheduler.Web.Models
@@ -17,7 +18,9 @@ namespace JIF.Scheduler.Web.Models
 
         public string JobName { get; set; }
 
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        //public ILog _log { get; set; }
+        private static Logger _log = LogManager.GetCurrentClassLogger();
+
 
         public async void Execute(IJobExecutionContext context)
         {
@@ -31,13 +34,13 @@ namespace JIF.Scheduler.Web.Models
 
                     string resultStr = await response.Content.ReadAsStringAsync();
 
-                    logger.Info("ID:[{0}-{1}], Result - {2}", context.JobDetail.Key.Name, JobName, resultStr);
+                    _log.Info("ID:[{0}-{1}], Result - {2}", context.JobDetail.Key.Name, JobName, resultStr);
                 };
 
             }
             catch (Exception ex)
             {
-                logger.Error("ID:[{0}-{1}], Result - {2}", context.JobDetail.Key.Name, JobName, ex.Message);
+                _log.Error("ID:[{0}-{1}], Result - {2}", context.JobDetail.Key.Name, JobName, ex.Message);
             }
         }
     }

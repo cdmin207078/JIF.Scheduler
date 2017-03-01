@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using JIF.Scheduler.Web.Models;
+using JIF.Scheduler.Web.Services;
 using Quartz;
 using Quartz.Impl;
-using JIF.Scheduler.Web.Services;
-using JIF.Scheduler.Web.Models;
 
 namespace JIF.Scheduler.Web
 {
@@ -41,13 +37,15 @@ namespace JIF.Scheduler.Web
                     .WithCronSchedule(j.CronString)
                     .Build();
 
-
                 sched.ScheduleJob(job, trigger);
             }
 
 
+            sched.PauseTrigger(new TriggerKey(""));
+
+
             // setting recycling control
-            IJobDetail RecyclingJob = JobBuilder.Create<HttpServiceJob>()
+            IJobDetail RecyclingJob = JobBuilder.Create<GCRecyclingJob>()
                 .WithIdentity("GC.Collect", "recycling-job")
                 .Build();
 

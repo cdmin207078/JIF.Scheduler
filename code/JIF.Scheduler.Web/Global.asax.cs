@@ -14,7 +14,12 @@ namespace JIF.Scheduler.Web
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            // 初始化并启动Job
+            // Init DI
+            //DependencyRegistrar.RegisterDependencies();
+            DIContainerManager.Initialize();
+
+
+            // Init Scheduler
             SchedulerConfig.Init();
         }
     }

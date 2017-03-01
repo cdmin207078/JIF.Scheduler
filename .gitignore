@@ -17,3 +17,7 @@ bin
 # user files
 .user
 .suo
+
+# log
+log/
+logs/
