@@ -1,8 +1,7 @@
-﻿using Quartz;
+﻿using Common.Logging;
+using JIF.Scheduler.Core.Infrastructure;
+using Quartz;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace JIF.Scheduler.Web.Models
 {
@@ -10,7 +9,12 @@ namespace JIF.Scheduler.Web.Models
     {
         public void Execute(IJobExecutionContext context)
         {
+            var _log = EngineContext.Current.Resolve<ILog>();
+
+            _log.Info("GC.Collect");
+
             GC.Collect();
+
         }
     }
 }

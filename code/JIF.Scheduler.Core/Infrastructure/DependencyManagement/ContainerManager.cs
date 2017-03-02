@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace JIF.Scheduler.Core.Infrastructure
+namespace JIF.Scheduler.Core.Infrastructure.DependencyManagement
 {
     /// <summary>
     /// Container manager

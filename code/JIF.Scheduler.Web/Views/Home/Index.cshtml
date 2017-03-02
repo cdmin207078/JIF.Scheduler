@@ -13,65 +13,75 @@
                     <th style="width: 40px;">状态</th>
                     <th>名称</th>
                     <th>描述</th>
+                    <th>ServiceURL</th>
+                    <th>CronString</th>
                     <th>操作</th>
                 </tr>
-                <tr>
-                    <td>1.</td>
-                    <td><span class="label label-success">运行中</span></td>
-                    <td>Update software</td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="javascript:;" class="btn btn-warning btn-xs">暂停</a>
-                        <a href="/Home/Detail/1" class="btn btn-primary btn-xs">详情</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td><span class="label label-warning">暂停</span></td>
-                    <td>Clean database</td>
-                    <td>
-                        <div class="progress progress-xs progress-striped active">
-                            <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <a class="btn btn-success btn-xs">启动</a>
-                        <a class="btn btn-primary btn-xs">详情</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td><span class="label label-success">运行中</span></td>
-                    <td>Cron job running</td>
-                    <td>
-                        <div class="progress progress-xs progress-striped active">
-                            <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <a class="btn btn-warning btn-xs">暂停</a>
-                        <a class="btn btn-primary btn-xs">详情</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4.</td>
-                    <td><span class="label label-success">运行中</span></td>
-                    <td>Fix and squish bugs</td>
-                    <td>
-                        <div class="progress progress-xs progress-striped active">
-                            <div class="progress-bar progress-bar-success" style="width: 90%"></div>
-                        </div>
-                    </td>
-                    <td>
-                        <a class="btn btn-warning btn-xs">暂停</a>
-                        <a class="btn btn-primary btn-xs">详情</a>
-                    </td>
-                </tr>
+                @{
+                    var jobs = ViewBag.Jobs as List<JIF.Scheduler.Web.Models.JobInfo>;
+
+                    foreach (var j in jobs)
+                    {
+                        <tr id="job-@j.Id-tr">
+                            <td>1.</td>
+                            <td><span id="job-@j.Id-status" class="label label-success">运行中</span></td>
+                            <td>@j.Name</td>
+                            <td>@j.Description</td>
+                            <td>@j.ServiceUrl</td>
+                            <td>@j.CronString</td>
+                            <td>
+                                <a id="job-@j.Id-option-start" href="javascript:;" class="btn btn-success btn-xs" data-id="@j.Id" data-name="@j.Name" style="display:none;">启动</a>
+                                <a id="job-@j.Id-option-pause" href="javascript:;" class="btn btn-warning btn-xs" data-id="@j.Id" data-name="@j.Name">暂停</a>
+                                <a href="/Home/Detail/@j.Id" class="btn btn-primary btn-xs">详情</a>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>
 </div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('.btn-job-pause').on('click', function () {
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
+
+                $.confirm({
+                    type: 'red',
+                    title: '通知',
+                    content: '确认要暂停任务: [<b>' + name + '</b>]',
+                    buttons: {
+                        ok: {
+                            text: '确定',
+                            action: function () {
+                                $.post('', function (result) {
+                                    if (result.success) {
+                                        $('job-' + id + '-status').removeClass('label-success');
+                                        $('job-' + id + '-status').addClass('label-warn');
+                                        $('job-' + id + '-option-pause').hide();
+                                    } else {
+                                        $.alert({
+                                            type: 'orange',
+                                            content: '失败: ' + result.message
+                                        });
+                                    }
+                                });
+                            }
+                        },
+                        no: {
+                            text: '取消',
+                            action: function () { }
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
+}

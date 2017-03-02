@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JIF.Scheduler.Core.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,13 +15,12 @@ namespace JIF.Scheduler.Web
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            // Init DI
-            //DependencyRegistrar.RegisterDependencies();
-            DIContainerManager.Initialize();
+            // initialize engine context
+            EngineContext.Initialize(false);
 
+            // initialize Scheduler
+            EngineContext.Current.Resolve<SchedulerContext>();
 
-            // Init Scheduler
-            SchedulerConfig.Init();
         }
     }
 }

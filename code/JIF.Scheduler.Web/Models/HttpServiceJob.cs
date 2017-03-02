@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using JIF.Scheduler.Core.Log;
 using NLog;
+using JIF.Scheduler.Core.Infrastructure;
 
 namespace JIF.Scheduler.Web.Models
 {
@@ -18,12 +19,10 @@ namespace JIF.Scheduler.Web.Models
 
         public string JobName { get; set; }
 
-        //public ILog _log { get; set; }
-        private static Logger _log = LogManager.GetCurrentClassLogger();
-
-
         public async void Execute(IJobExecutionContext context)
         {
+            var _log = EngineContext.Current.Resolve<ILog>();
+
             try
             {
                 using (HttpClient httpClient = new HttpClient())

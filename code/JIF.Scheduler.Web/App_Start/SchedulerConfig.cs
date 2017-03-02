@@ -1,28 +1,45 @@
-﻿using JIF.Scheduler.Web.Models;
+﻿using JIF.Scheduler.Core.Infrastructure;
+using JIF.Scheduler.Web.Models;
 using JIF.Scheduler.Web.Services;
 using Quartz;
 using Quartz.Impl;
 
 namespace JIF.Scheduler.Web
 {
-    public static class SchedulerConfig
+    public class SchedulerContext
     {
-        private static ISchedulerFactory _schedFact;
+        private JobInfoServices _jobInfoService;
 
-        public static void Init()
+        private IScheduler _scheduler;
+
+        public SchedulerContext(JobInfoServices jobInfoService)
         {
-            var jobs = new JobInfoServices().GetJobs();
+            _jobInfoService = jobInfoService;
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            if (Singleton<SchedulerContext>.Instance != null)
+            {
+                return;
+            }
+            else
+            {
+                Singleton<SchedulerContext>.Instance = this;
+            }
+
+            var jobs = _jobInfoService.GetJobs();
 
             if (jobs == null)
                 return;
 
-            if (_schedFact != null)
-                return;
-
-            _schedFact = new StdSchedulerFactory();
+            ISchedulerFactory _schedFact = new StdSchedulerFactory();
 
             // get a scheduler
-            IScheduler sched = _schedFact.GetScheduler();
+            _scheduler = _schedFact.GetScheduler();
+            _scheduler.Start();
 
             foreach (var j in jobs)
             {
@@ -37,12 +54,8 @@ namespace JIF.Scheduler.Web
                     .WithCronSchedule(j.CronString)
                     .Build();
 
-                sched.ScheduleJob(job, trigger);
+                _scheduler.ScheduleJob(job, trigger);
             }
-
-
-            sched.PauseTrigger(new TriggerKey(""));
-
 
             // setting recycling control
             IJobDetail RecyclingJob = JobBuilder.Create<GCRecyclingJob>()
@@ -55,7 +68,16 @@ namespace JIF.Scheduler.Web
                     .WithIntervalInMinutes(10))
                 .Build();
 
-            sched.Start();
+            _scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
+
+        }
+
+        public IScheduler Scheduler
+        {
+            get
+            {
+                return _scheduler;
+            }
         }
     }
 }
