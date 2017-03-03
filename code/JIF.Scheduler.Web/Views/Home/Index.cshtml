@@ -3,6 +3,7 @@
 <div class="box box-primary">
     <div class="box-header">
         <h3 class="box-title">所有任务</h3>
+
     </div>
 
     <div class="box-body no-padding">
@@ -10,11 +11,11 @@
             <tbody>
                 <tr>
                     <th style="width: 10px;">#</th>
-                    <th style="width: 40px;">状态</th>
                     <th>名称</th>
                     <th>描述</th>
                     <th>ServiceURL</th>
                     <th>CronString</th>
+                    <th>运行状态</th>
                     <th>操作</th>
                 </tr>
                 @{
@@ -24,14 +25,14 @@
                     {
                         <tr id="job-@j.Id-tr">
                             <td>1.</td>
-                            <td><span id="job-@j.Id-status" class="label label-success">运行中</span></td>
                             <td>@j.Name</td>
                             <td>@j.Description</td>
                             <td>@j.ServiceUrl</td>
                             <td>@j.CronString</td>
                             <td>
-                                <a id="job-@j.Id-option-start" href="javascript:;" class="btn btn-success btn-xs" data-id="@j.Id" data-name="@j.Name" style="display:none;">启动</a>
-                                <a id="job-@j.Id-option-pause" href="javascript:;" class="btn btn-warning btn-xs" data-id="@j.Id" data-name="@j.Name">暂停</a>
+                                <input type="checkbox" class="checkbox-switch" data-j-id="@j.Id" data-j-name="@j.Name" />
+                            </td>
+                            <td>
                                 <a href="/Home/Detail/@j.Id" class="btn btn-primary btn-xs">详情</a>
                             </td>
                         </tr>
@@ -44,44 +45,80 @@
 
 
 @section Scripts {
+
     <script type="text/javascript">
 
         $(function () {
 
+            init();
+
             $('.btn-job-pause').on('click', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
-
-                $.confirm({
-                    type: 'red',
-                    title: '通知',
-                    content: '确认要暂停任务: [<b>' + name + '</b>]',
-                    buttons: {
-                        ok: {
-                            text: '确定',
-                            action: function () {
-                                $.post('', function (result) {
-                                    if (result.success) {
-                                        $('job-' + id + '-status').removeClass('label-success');
-                                        $('job-' + id + '-status').addClass('label-warn');
-                                        $('job-' + id + '-option-pause').hide();
-                                    } else {
-                                        $.alert({
-                                            type: 'orange',
-                                            content: '失败: ' + result.message
-                                        });
-                                    }
-                                });
-                            }
-                        },
-                        no: {
-                            text: '取消',
-                            action: function () { }
-                        }
-                    }
-                });
             });
         });
+
+
+        function init() {
+
+            // 初始化 运行状态选择插件
+            initSwitch();
+        }
+
+        function initSwitch() {
+
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.checkbox-switch'));
+
+            elems.forEach(function (el) {
+                var sw = new Switch(el,
+                    {
+                        checked: true,
+                        showText: true,
+                        onText: 'ON',
+                        offText: 'OFF',
+                        onClick: function () {
+
+                            var isRunning = el.checked;
+
+                            var j_id = el.attributes.getNamedItem('data-j-id').value;
+                            var j_name = el.attributes.getNamedItem('data-j-name').value;
+                            var content = '确定要' + (isRunning ? '暂停' : '启动') + '任务 : ' + j_name.toString() + ' ?';
+                            var serviceurl = isRunning ? '/home/pausejob/' : '/home/startjob/';
+
+                            $.confirm({
+                                type: 'red',
+                                title: '通知',
+                                content: content,
+                                buttons: {
+                                    ok: {
+                                        text: '确认',
+                                        action: function () {
+
+                                            $.post(serviceurl, { id: j_id }, function (result) {
+                                                if (result.success) {
+                                                    sw.toggle();
+                                                } else {
+                                                    $.alert({
+                                                        type: 'red',
+                                                        title: '操作失败',
+                                                        content: result.message
+                                                    });
+                                                }
+                                            });
+
+                                        }
+                                    },
+                                    no: {
+                                        text: '取消',
+                                        action: function () { }
+                                    }
+                                }
+                            });
+
+                        },
+                    });
+            });
+        }
 
     </script>
 }

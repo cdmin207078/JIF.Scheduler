@@ -51,10 +51,12 @@ namespace JIF.Scheduler.Web
 
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity(j.Id, "httpservice-trigger")
-                    .WithCronSchedule(j.CronString)
+                    .WithCronSchedule(j.CronString, x => x
+                         .WithMisfireHandlingInstructionIgnoreMisfires())
                     .Build();
 
                 _scheduler.ScheduleJob(job, trigger);
+
             }
 
             // setting recycling control
@@ -69,7 +71,6 @@ namespace JIF.Scheduler.Web
                 .Build();
 
             _scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
-
         }
 
         public IScheduler Scheduler

@@ -10,6 +10,7 @@ using JIF.Scheduler.Core.Infrastructure;
 
 namespace JIF.Scheduler.Web.Models
 {
+    [DisallowConcurrentExecution]
     public class HttpServiceJob : IJob
     {
         /// <summary>
