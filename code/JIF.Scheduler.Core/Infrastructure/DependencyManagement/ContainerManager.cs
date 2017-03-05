@@ -129,17 +129,17 @@ namespace JIF.Scheduler.Core.Infrastructure.DependencyManagement
                     foreach (var parameter in parameters)
                     {
                         var service = Resolve(parameter.ParameterType, scope);
-                        if (service == null) throw new NopException("Unknown dependency");
+                        if (service == null) throw new JIFException("Unknown dependency");
                         parameterInstances.Add(service);
                     }
                     return Activator.CreateInstance(type, parameterInstances.ToArray());
                 }
-                catch (NopException)
+                catch (JIFException)
                 {
 
                 }
             }
-            throw new NopException("No constructor  was found that had all the dependencies satisfied.");
+            throw new JIFException("No constructor  was found that had all the dependencies satisfied.");
         }
 
         /// <summary>

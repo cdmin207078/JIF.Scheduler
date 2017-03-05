@@ -89,12 +89,12 @@
     <Compile Include="Infrastructure\EngineContext.cs" />
     <Compile Include="Infrastructure\IEngine.cs" />
     <Compile Include="Infrastructure\ITypeFinder.cs" />
-    <Compile Include="Infrastructure\NopEngine.cs" />
+    <Compile Include="Infrastructure\JIFEngine.cs" />
     <Compile Include="Infrastructure\Singleton.cs" />
     <Compile Include="Infrastructure\WebAppTypeFinder.cs" />
     <Compile Include="Log\ILog.cs" />
     <Compile Include="Log\NLogger.cs" />
-    <Compile Include="NopException.cs" />
+    <Compile Include="JIFException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

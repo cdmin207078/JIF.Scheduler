@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace JIF.Scheduler.Core.Infrastructure
 {
     /// <summary>
-    /// Provides access to the singleton instance of the Nop engine.
+    /// Provides access to the singleton instance of the JIF engine.
     /// </summary>
     public class EngineContext
     {
         #region Methods
 
         /// <summary>
-        /// Initializes a static instance of the Nop factory.
+        /// Initializes a static instance of the JIF factory.
         /// </summary>
         /// <param name="forceRecreate">Creates a new factory instance even though the factory has been previously initialized.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -25,9 +25,9 @@ namespace JIF.Scheduler.Core.Infrastructure
         {
             if (Singleton<IEngine>.Instance == null || forceRecreate)
             {
-                Singleton<IEngine>.Instance = new NopEngine();
+                Singleton<IEngine>.Instance = new JIFEngine();
 
-                var config = ConfigurationManager.GetSection("NopConfig") as NopConfig;
+                var config = ConfigurationManager.GetSection("JIFConfig") as JIFConfig;
                 Singleton<IEngine>.Instance.Initialize(config);
             }
             return Singleton<IEngine>.Instance;
@@ -48,7 +48,7 @@ namespace JIF.Scheduler.Core.Infrastructure
         #region Properties
 
         /// <summary>
-        /// Gets the singleton Nop engine used to access Nop services.
+        /// Gets the singleton JIF engine used to access JIF services.
         /// </summary>
         public static IEngine Current
         {

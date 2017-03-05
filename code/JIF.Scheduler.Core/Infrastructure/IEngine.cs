@@ -10,8 +10,8 @@ namespace JIF.Scheduler.Core.Infrastructure
 {
     /// <summary>
     /// Classes implementing this interface can serve as a portal for the 
-    /// various services composing the Nop engine. Edit functionality, modules
-    /// and implementations access most Nop functionality through this 
+    /// various services composing the JIF engine. Edit functionality, modules
+    /// and implementations access most JIF functionality through this 
     /// interface.
     /// </summary>
     public interface IEngine
@@ -25,7 +25,7 @@ namespace JIF.Scheduler.Core.Infrastructure
         /// Initialize components and plugins in the nop environment.
         /// </summary>
         /// <param name="config">Config</param>
-        void Initialize(NopConfig config);
+        void Initialize(JIFConfig config);
 
         /// <summary>
         /// Resolve dependency

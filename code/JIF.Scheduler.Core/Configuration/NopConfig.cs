@@ -9,9 +9,9 @@ using System.Xml;
 namespace JIF.Scheduler.Core.Configuration
 {
     /// <summary>
-    /// Represents a NopConfig
+    /// Represents a JIFConfig
     /// </summary>
-    public partial class NopConfig : IConfigurationSectionHandler
+    public partial class JIFConfig : IConfigurationSectionHandler
     {
         /// <summary>
         /// Creates a configuration section handler.
@@ -22,7 +22,7 @@ namespace JIF.Scheduler.Core.Configuration
         /// <returns>The created section handler object.</returns>
         public object Create(object parent, object configContext, XmlNode section)
         {
-            var config = new NopConfig();
+            var config = new JIFConfig();
 
             var startupNode = section.SelectSingleNode("Startup");
             config.IgnoreStartupTasks = GetBool(startupNode, "IgnoreStartupTasks");
@@ -34,8 +34,8 @@ namespace JIF.Scheduler.Core.Configuration
             var userAgentStringsNode = section.SelectSingleNode("UserAgentStrings");
             config.UserAgentStringsPath = GetString(userAgentStringsNode, "databasePath");
 
-            var supportPreviousNopcommerceVersionsNode = section.SelectSingleNode("SupportPreviousNopcommerceVersions");
-            config.SupportPreviousNopcommerceVersions = GetBool(supportPreviousNopcommerceVersionsNode, "Enabled");
+            var supportPreviousJIFcommerceVersionsNode = section.SelectSingleNode("SupportPreviousJIFcommerceVersions");
+            config.SupportPreviousJIFcommerceVersions = GetBool(supportPreviousJIFcommerceVersionsNode, "Enabled");
 
             var webFarmsNode = section.SelectSingleNode("WebFarms");
             config.MultipleInstancesEnabled = GetBool(webFarmsNode, "MultipleInstancesEnabled");
@@ -99,7 +99,7 @@ namespace JIF.Scheduler.Core.Configuration
         /// <summary>
         /// Indicates whether we should support previous nopCommerce versions (it can slightly improve performance)
         /// </summary>
-        public bool SupportPreviousNopcommerceVersions { get; private set; }
+        public bool SupportPreviousJIFcommerceVersions { get; private set; }
 
 
 

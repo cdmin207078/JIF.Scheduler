@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace JIF.Scheduler.Core.Infrastructure
 {
     /// <summary>
-    /// A class that finds types needed by Nop by looping assemblies in the 
+    /// A class that finds types needed by JIF by looping assemblies in the 
     /// currently executing AppDomain. Only assemblies whose names matches
     /// certain patterns are investigated and an optional list of assemblies
     /// referenced by <see cref="AssemblyNames"/> are always investigated.
@@ -36,7 +36,7 @@ namespace JIF.Scheduler.Core.Infrastructure
             get { return AppDomain.CurrentDomain; }
         }
 
-        /// <summary>Gets or sets whether Nop should iterate assemblies in the app domain when loading Nop types. Loading patterns are applied when loading these assemblies.</summary>
+        /// <summary>Gets or sets whether JIF should iterate assemblies in the app domain when loading JIF types. Loading patterns are applied when loading these assemblies.</summary>
         public bool LoadAppDomainAssemblies
         {
             get { return loadAppDomainAssemblies; }
@@ -58,7 +58,7 @@ namespace JIF.Scheduler.Core.Infrastructure
         }
 
         /// <summary>Gets or sets the pattern for dll that will be investigated. For ease of use this defaults to match all but to increase performance you might want to configure a pattern that includes assemblies and your own.</summary>
-        /// <remarks>If you change this so that Nop assemblies arn't investigated (e.g. by not including something like "^Nop|..." you may break core functionality.</remarks>
+        /// <remarks>If you change this so that JIF assemblies arn't investigated (e.g. by not including something like "^JIF|..." you may break core functionality.</remarks>
         public string AssemblyRestrictToLoadingPattern
         {
             get { return assemblyRestrictToLoadingPattern; }
@@ -144,7 +144,7 @@ namespace JIF.Scheduler.Core.Infrastructure
         }
 
         /// <summary>Gets the assemblies related to the current implementation.</summary>
-        /// <returns>A list of assemblies that should be loaded by the Nop factory.</returns>
+        /// <returns>A list of assemblies that should be loaded by the JIF factory.</returns>
         public virtual IList<Assembly> GetAssemblies()
         {
             var addedAssemblyNames = new List<string>();
@@ -206,7 +206,7 @@ namespace JIF.Scheduler.Core.Infrastructure
         /// The name of the assembly to check.
         /// </param>
         /// <returns>
-        /// True if the assembly should be loaded into Nop.
+        /// True if the assembly should be loaded into JIF.
         /// </returns>
         public virtual bool Matches(string assemblyFullName)
         {

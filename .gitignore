@@ -19,5 +19,11 @@ bin
 .suo
 
 # log
-log/
 logs/
+
+
+# node
+node_modules/
+.idea
+
+coverage

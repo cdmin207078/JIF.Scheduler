@@ -16,7 +16,7 @@ namespace JIF.Scheduler.Web
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, JIFConfig config)
         {
             // register HTTP context and other related stuff
             builder.Register(c => new HttpContextWrapper(HttpContext.Current) as HttpContextBase)

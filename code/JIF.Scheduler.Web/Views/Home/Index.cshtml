@@ -33,7 +33,7 @@
                                 <input type="checkbox" class="checkbox-switch" data-j-id="@j.Id" data-j-name="@j.Name" />
                             </td>
                             <td>
-                                <a href="/Home/Detail/@j.Id" class="btn btn-primary btn-xs">详情</a>
+                                <a href="/Home/Detail/@j.Id" class="btn btn-primary btn-sm">详情</a>
                             </td>
                         </tr>
                     }
@@ -49,13 +49,7 @@
     <script type="text/javascript">
 
         $(function () {
-
             init();
-
-            $('.btn-job-pause').on('click', function () {
-                var id = $(this).attr('data-id');
-                var name = $(this).attr('data-name');
-            });
         });
 
 

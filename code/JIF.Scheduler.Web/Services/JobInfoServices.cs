@@ -17,7 +17,7 @@ namespace JIF.Scheduler.Web.Services
                 Id = "A",
                 Name = "调用 Info 方法",
                 Description = "无",
-                ServiceUrl = "http://192.168.1.76:60004/home/info",
+                ServiceUrl = "http://localhost:60004/home/info",
                 CronString = "0/10 * 8-20 * * ?"
             });
 
@@ -26,7 +26,7 @@ namespace JIF.Scheduler.Web.Services
                 Id = "B",
                 Name = "调用 Error 方法",
                 Description = "无",
-                ServiceUrl = "http://192.168.1.76:60004/home/error",
+                ServiceUrl = "http://localhost:60004/home/error",
                 CronString = "0/5 * 8-20 * * ?"
             });
 
@@ -35,7 +35,7 @@ namespace JIF.Scheduler.Web.Services
                 Id = "C",
                 Name = "调用 Debug 方法",
                 Description = "无",
-                ServiceUrl = "http://192.168.1.76:60004/home/debug",
+                ServiceUrl = "http://localhost:60004/home/debug",
                 CronString = "0/4 * 8-20 * * ?"
             });
 
@@ -44,7 +44,7 @@ namespace JIF.Scheduler.Web.Services
                 Id = "D",
                 Name = "调用 Trace 方法",
                 Description = "无",
-                ServiceUrl = "http://192.168.1.76:60004/home/trace",
+                ServiceUrl = "http://localhost:60004/home/trace",
                 CronString = "0/3 * 8-20 * * ?"
             });
 
@@ -53,7 +53,7 @@ namespace JIF.Scheduler.Web.Services
                 Id = "E",
                 Name = "调用 Warn 方法",
                 Description = "无",
-                ServiceUrl = "http://192.168.1.76:60004/home/warn",
+                ServiceUrl = "http://localhost:60004/home/warn",
                 CronString = "0/2 * 8-20 * * ?"
             });
 
