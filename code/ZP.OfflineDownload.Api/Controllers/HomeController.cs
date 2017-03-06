@@ -24,33 +24,33 @@ namespace ZP.OfflineDownload.Api.Controllers
         [HttpGet]
         public IHttpActionResult Error()
         {
-            logger.Error("Info-Method");
+            logger.Error("Error-Method");
 
-            return Ok("Info-Method");
+            return Ok("Error-Method");
         }
 
         [HttpGet]
         public IHttpActionResult Debug()
         {
-            logger.Debug("Info-Method");
+            logger.Debug("Debug-Method");
 
-            return Ok("Info-Method");
+            return Ok("Debug-Method");
         }
 
         [HttpGet]
         public IHttpActionResult Trace()
         {
-            logger.Trace("Info-Method");
+            logger.Trace("Trace-Method");
 
-            return Ok("Info-Method");
+            return Ok("Trace-Method");
         }
 
         [HttpGet]
         public IHttpActionResult Warn()
         {
-            logger.Warn("Info-Method");
+            logger.Warn("Warn-Method");
 
-            return Ok("Info-Method");
+            return Ok("Warn-Method");
         }
     }
 }

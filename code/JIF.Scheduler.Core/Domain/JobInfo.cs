@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JIF.Scheduler.Web.Models
+namespace JIF.Scheduler.Core.Domain
 {
-    public class JobInfo
+    public class JobInfo : BaseEntity
     {
-
-        /// <summary>
-        /// 任务主键编号 - guid
-        /// </summary>
-        public string Id { get; set; }
+        ///// <summary>
+        ///// 任务主键编号 - guid
+        ///// </summary>
+        //public string JobKey { get; set; }
 
         /// <summary>
         /// 任务名称
@@ -33,5 +33,11 @@ namespace JIF.Scheduler.Web.Models
         /// 排程表达式
         /// </summary>
         public string CronString { get; set; }
+
+        /// <summary>
+        /// 是否启用. 启用 - true, 停用 - false
+        /// </summary>
+        public bool Enabled { get; set; }
+
     }
 }

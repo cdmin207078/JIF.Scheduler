@@ -19,7 +19,7 @@
                     <th>操作</th>
                 </tr>
                 @{
-                    var jobs = ViewBag.Jobs as List<JIF.Scheduler.Web.Models.JobInfo>;
+                    var jobs = ViewBag.Jobs as List<JIF.Scheduler.Core.Domain.JobInfo>;
 
                     foreach (var j in jobs)
                     {
@@ -30,13 +30,13 @@
                             <td>@j.ServiceUrl</td>
                             <td>@j.CronString</td>
                             <td>
-                                <input type="checkbox" class="checkbox-switch" data-j-id="@j.Id" data-j-name="@j.Name" />
+                                <input type="checkbox" class="checkbox-switch" data-j-id="@j.Id" data-j-name="@j.Name" @{ j.Enabled ? "checked" : ""} />
                             </td>
                             <td>
                                 <a href="/Home/Detail/@j.Id" class="btn btn-primary btn-sm">详情</a>
                             </td>
                         </tr>
-                    }
+    }
                 }
             </tbody>
         </table>

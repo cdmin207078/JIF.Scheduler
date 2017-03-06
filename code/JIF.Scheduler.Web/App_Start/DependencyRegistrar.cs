@@ -11,6 +11,9 @@ using JIF.Scheduler.Core.Configuration;
 using JIF.Scheduler.Core.Infrastructure;
 using JIF.Scheduler.Web.Services;
 using Quartz;
+using JIF.Scheduler.Data.EntityFramework;
+using System.Data.Entity;
+using JIF.Scheduler.Core.Data;
 
 namespace JIF.Scheduler.Web
 {
@@ -53,9 +56,16 @@ namespace JIF.Scheduler.Web
             // OPTIONAL: Enable property injection into action filters.
             builder.RegisterFilterProvider();
 
+            // OPTIONAL: register dbcontext 
+            builder.Register<DbContext>(c => new JIFDbContext("name=JIF.Scheduler.DB")).InstancePerLifetimeScope();
+
+            // OPTIONAL: repositores
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+
 
             builder.RegisterType<JobInfoServices>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NLogger>().As<ILog>().InstancePerLifetimeScope();
+
 
             // Build Scheduler
             builder.RegisterType<SchedulerContext>().AsSelf().SingleInstance();

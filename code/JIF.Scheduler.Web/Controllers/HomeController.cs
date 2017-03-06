@@ -11,24 +11,22 @@ namespace JIF.Scheduler.Web.Controllers
     public class HomeController : BaseController
     {
         private JobInfoServices _jobInfoService;
-        private SchedulerContext _schedulerContext;
 
         public HomeController(JobInfoServices jobInfoService,
            SchedulerContext schedulerContext)
         {
             _jobInfoService = jobInfoService;
-            _schedulerContext = schedulerContext;
         }
 
         // GET: Home
         public ActionResult Index()
         {
-            ViewBag.Jobs = _jobInfoService.GetJobs();
+            ViewBag.Jobs = _jobInfoService.GetAllJobs();
 
             return View();
         }
 
-        public ActionResult Detail(string id)
+        public ActionResult Detail(int id)
         {
             ViewBag.Job = _jobInfoService.Get(id);
 
@@ -37,18 +35,11 @@ namespace JIF.Scheduler.Web.Controllers
 
         // 暂停单个 Job
         [HttpPost]
-        public JsonResult PauseJob(string id)
+        public JsonResult PauseJob(int id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                return AjaxFail("任务编号不能为空");
-
             try
             {
-
-                // http://stackoverflow.com/questions/1933676/quartz-java-resuming-a-job-excecutes-it-many-times
-                // 恢复之后多次触发原因
-                _schedulerContext.Scheduler.PauseJob(new Quartz.JobKey(id, "httpservice-job"));
-                _schedulerContext.Scheduler.PauseTrigger(new Quartz.TriggerKey(id, "httpservice-trigger"));
+                _jobInfoService.StopJob(id);
 
                 return AjaxOk();
             }
@@ -60,15 +51,11 @@ namespace JIF.Scheduler.Web.Controllers
 
         // 启动单个 Job
         [HttpPost]
-        public JsonResult StartJob(string id)
+        public JsonResult StartJob(int id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                return AjaxFail("任务编号不能为空");
-
             try
             {
-                _schedulerContext.Scheduler.ResumeJob(new Quartz.JobKey(id, "httpservice-job"));
-                _schedulerContext.Scheduler.ResumeTrigger(new Quartz.TriggerKey(id, "httpservice-trigger"));
+                _jobInfoService.StartUpJob(id);
 
                 return AjaxOk();
             }
