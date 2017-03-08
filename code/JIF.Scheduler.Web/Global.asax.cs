@@ -1,4 +1,5 @@
 ﻿using JIF.Scheduler.Core.Infrastructure;
+using JIF.Scheduler.Core.Services.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace JIF.Scheduler.Web
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
+            GlobalFilters.Filters.Add(new JIFExceptionAttribute());
+
             // initialize engine context
             EngineContext.Initialize(false);
 
             // initialize Scheduler
-            EngineContext.Current.Resolve<SchedulerContext>().Initialize();
+            EngineContext.Current.Resolve<SchedulerContainer>().Initialize();
 
         }
     }

@@ -1,19 +1,15 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
+using JIF.Scheduler.Core.Configuration;
+using JIF.Scheduler.Core.Data;
+using JIF.Scheduler.Core.Infrastructure;
 using JIF.Scheduler.Core.Infrastructure.DependencyManagement;
 using JIF.Scheduler.Core.Log;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using JIF.Scheduler.Core.Configuration;
-using JIF.Scheduler.Core.Infrastructure;
-using JIF.Scheduler.Web.Services;
-using Quartz;
+using JIF.Scheduler.Core.Services.Jobs;
 using JIF.Scheduler.Data.EntityFramework;
+using Quartz;
 using System.Data.Entity;
-using JIF.Scheduler.Core.Data;
+using System.Web;
 
 namespace JIF.Scheduler.Web
 {
@@ -67,13 +63,10 @@ namespace JIF.Scheduler.Web
             builder.RegisterType<NLogger>().As<ILog>().SingleInstance();
 
             // Scheduler
-            builder.RegisterType<SchedulerContext>().SingleInstance();
-
+            builder.RegisterType<SchedulerContainer>().SingleInstance();
 
             // Services
             builder.RegisterType<JobInfoServices>().InstancePerLifetimeScope();
-
-
         }
 
         public int Order { get { return 0; } }

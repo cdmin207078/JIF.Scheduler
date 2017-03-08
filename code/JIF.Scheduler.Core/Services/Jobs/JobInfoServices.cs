@@ -1,20 +1,24 @@
 ﻿using JIF.Scheduler.Core.Data;
 using JIF.Scheduler.Core.Domain;
+using JIF.Scheduler.Core.Services.Jobs.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JIF.Scheduler.Web.Services
+namespace JIF.Scheduler.Core.Services.Jobs
 {
     public class JobInfoServices
     {
         private readonly IRepository<JobInfo> _jobInfoRepository;
-        private readonly SchedulerContext _schedulerContext;
+        private readonly SchedulerContainer _schedulerContainer;
 
         public JobInfoServices(IRepository<JobInfo> jobInfoRepository,
-            SchedulerContext schedulerContext)
+            SchedulerContainer schedulerContainer)
         {
             _jobInfoRepository = jobInfoRepository;
-            _schedulerContext = schedulerContext;
+            _schedulerContainer = schedulerContainer;
         }
 
 
@@ -37,6 +41,58 @@ namespace JIF.Scheduler.Web.Services
             return _jobInfoRepository.Get(id);
         }
 
+
+        /// <summary>
+        /// 新增Job
+        /// </summary>
+        /// <param name="model"></param>
+        public void Add(JobInfoUpdateInputModel model)
+        {
+
+            if (string.IsNullOrWhiteSpace(model.Name)
+                || string.IsNullOrWhiteSpace(model.ServiceUrl)
+                || string.IsNullOrWhiteSpace(model.CronString))
+                throw new JIFException("Job 信息不完整");
+
+            var job = new JobInfo();
+
+            job.Name = model.Name;
+            job.Description = model.Description;
+            job.ServiceUrl = model.ServiceUrl;
+            job.CronString = model.CronString;
+            job.Enabled = false;
+
+            _jobInfoRepository.Insert(job);
+        }
+
+        /// <summary>
+        /// 修改Job
+        /// </summary>
+        public void Update(int id, JobInfoUpdateInputModel model)
+        {
+            if (id <= 0)
+                throw new JIFException("Job 编号不正确");
+
+            var job = Get(id);
+            if (job == null)
+                throw new JIFException("Job 信息不存在");
+
+
+            if (string.IsNullOrWhiteSpace(model.Name)
+                || string.IsNullOrWhiteSpace(model.ServiceUrl)
+                || string.IsNullOrWhiteSpace(model.CronString))
+                throw new JIFException("Job 信息不完整");
+
+
+            job.Name = model.Name;
+            job.Description = model.Description;
+            job.ServiceUrl = model.ServiceUrl;
+            job.CronString = model.CronString;
+
+            _jobInfoRepository.Update(job);
+        }
+
+
         /// <summary>
         /// 唤醒任务
         /// </summary>
@@ -46,7 +102,7 @@ namespace JIF.Scheduler.Web.Services
             try
             {
                 // 唤醒任务
-                _schedulerContext.ResumeJob(id);
+                _schedulerContainer.ResumeJob(id);
 
                 var job = _jobInfoRepository.Get(id);
                 if (job != null)
@@ -65,7 +121,7 @@ namespace JIF.Scheduler.Web.Services
         {
             try
             {
-                _schedulerContext.PauseJob(id);
+                _schedulerContainer.PauseJob(id);
 
                 var job = _jobInfoRepository.Get(id);
                 if (job != null)

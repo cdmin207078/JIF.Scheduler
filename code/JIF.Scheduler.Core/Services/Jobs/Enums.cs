@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JIF.Scheduler.Core.Domain
+namespace JIF.Scheduler.Core.Services.Jobs
 {
-
     public enum JobStatus
     {
         /// <summary>

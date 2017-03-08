@@ -1,14 +1,14 @@
-﻿using Quartz;
+﻿using JIF.Scheduler.Core.Infrastructure;
+using JIF.Scheduler.Core.Log;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Web;
-using JIF.Scheduler.Core.Log;
-using NLog;
-using JIF.Scheduler.Core.Infrastructure;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JIF.Scheduler.Web.Models
+namespace JIF.Scheduler.Core.Services.Jobs
 {
     [DisallowConcurrentExecution]
     public class HttpServiceJob : IJob

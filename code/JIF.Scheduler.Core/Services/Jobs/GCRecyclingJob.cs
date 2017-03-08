@@ -1,9 +1,13 @@
-﻿using Common.Logging;
-using JIF.Scheduler.Core.Infrastructure;
+﻿using JIF.Scheduler.Core.Infrastructure;
+using JIF.Scheduler.Core.Log;
 using Quartz;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JIF.Scheduler.Web.Models
+namespace JIF.Scheduler.Core.Services.Jobs
 {
     public class GCRecyclingJob : IJob
     {

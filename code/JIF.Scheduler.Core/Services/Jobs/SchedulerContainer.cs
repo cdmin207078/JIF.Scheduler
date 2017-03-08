@@ -1,23 +1,25 @@
 ﻿using JIF.Scheduler.Core.Infrastructure;
-using JIF.Scheduler.Web.Models;
-using JIF.Scheduler.Web.Services;
 using Quartz;
 using Quartz.Impl;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JIF.Scheduler.Web
+namespace JIF.Scheduler.Core.Services.Jobs
 {
-    public class SchedulerContext
+    public class SchedulerContainer
     {
         private IScheduler _scheduler;
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Initialize()
         {
-            if (Singleton<SchedulerContext>.Instance == null)
+            if (Singleton<SchedulerContainer>.Instance == null)
             {
-                Singleton<SchedulerContext>.Instance = this;
+                Singleton<SchedulerContainer>.Instance = this;
 
                 var jobService = EngineContext.Current.Resolve<JobInfoServices>();
 
