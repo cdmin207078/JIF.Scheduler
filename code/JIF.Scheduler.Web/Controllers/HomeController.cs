@@ -39,7 +39,7 @@ namespace JIF.Scheduler.Web.Controllers
         {
             try
             {
-                _jobInfoService.StopJob(id);
+                _jobInfoService.PauseJob(id);
 
                 return AjaxOk();
             }
@@ -51,11 +51,11 @@ namespace JIF.Scheduler.Web.Controllers
 
         // 启动单个 Job
         [HttpPost]
-        public JsonResult StartJob(int id)
+        public JsonResult ResumeJob(int id)
         {
             try
             {
-                _jobInfoService.StartUpJob(id);
+                _jobInfoService.ResumeJob(id);
 
                 return AjaxOk();
             }

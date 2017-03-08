@@ -51,7 +51,6 @@ namespace JIF.Scheduler.Core.Log
             _log.Info(message, args);
         }
 
-
         public void Trace(string message)
         {
             _log.Trace(message);

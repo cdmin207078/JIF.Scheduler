@@ -63,14 +63,15 @@ namespace JIF.Scheduler.Web
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
 
-            builder.RegisterType<JobInfoServices>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<NLogger>().As<ILog>().InstancePerLifetimeScope();
+            // Core Implements Dependency
+            builder.RegisterType<NLogger>().As<ILog>().SingleInstance();
+
+            // Scheduler
+            builder.RegisterType<SchedulerContext>().SingleInstance();
 
 
-            // Build Scheduler
-            builder.RegisterType<SchedulerContext>().AsSelf().SingleInstance();
-
-
+            // Services
+            builder.RegisterType<JobInfoServices>().InstancePerLifetimeScope();
 
 
         }

@@ -19,7 +19,7 @@ namespace JIF.Scheduler.Web
             EngineContext.Initialize(false);
 
             // initialize Scheduler
-            EngineContext.Current.Resolve<SchedulerContext>();
+            EngineContext.Current.Resolve<SchedulerContext>().Initialize();
 
         }
     }

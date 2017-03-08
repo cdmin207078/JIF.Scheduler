@@ -30,13 +30,13 @@
                             <td>@j.ServiceUrl</td>
                             <td>@j.CronString</td>
                             <td>
-                                <input type="checkbox" class="checkbox-switch" data-j-id="@j.Id" data-j-name="@j.Name" @{ j.Enabled ? "checked" : ""} />
+                                <input type="checkbox" class="checkbox-switch" data-j-id="@j.Id" data-j-name="@j.Name" checked="@j.Enabled" />
                             </td>
                             <td>
                                 <a href="/Home/Detail/@j.Id" class="btn btn-primary btn-sm">详情</a>
                             </td>
                         </tr>
-    }
+                    }
                 }
             </tbody>
         </table>
@@ -66,7 +66,6 @@
             elems.forEach(function (el) {
                 var sw = new Switch(el,
                     {
-                        checked: true,
                         showText: true,
                         onText: 'ON',
                         offText: 'OFF',
@@ -77,7 +76,7 @@
                             var j_id = el.attributes.getNamedItem('data-j-id').value;
                             var j_name = el.attributes.getNamedItem('data-j-name').value;
                             var content = '确定要' + (isRunning ? '暂停' : '启动') + '任务 : ' + j_name.toString() + ' ?';
-                            var serviceurl = isRunning ? '/home/pausejob/' : '/home/startjob/';
+                            var serviceurl = isRunning ? '/home/pausejob/' : '/home/resumejob/';
 
                             $.confirm({
                                 type: 'red',

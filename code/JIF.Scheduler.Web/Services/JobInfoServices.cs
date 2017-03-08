@@ -38,15 +38,21 @@ namespace JIF.Scheduler.Web.Services
         }
 
         /// <summary>
-        /// 启动任务
+        /// 唤醒任务
         /// </summary>
         /// <param name="id"></param>
-        public void StartUpJob(int id)
+        public void ResumeJob(int id)
         {
             try
             {
-                _schedulerContext.Scheduler.ResumeJob(new Quartz.JobKey(id.ToString(), "httpservice-job"));
-                _schedulerContext.Scheduler.ResumeTrigger(new Quartz.TriggerKey(id.ToString(), "httpservice-trigger"));
+                // 唤醒任务
+                _schedulerContext.ResumeJob(id);
+
+                var job = _jobInfoRepository.Get(id);
+                if (job != null)
+                    job.Enabled = true;
+
+                _jobInfoRepository.Update(job);
             }
             catch { }
         }
@@ -55,15 +61,17 @@ namespace JIF.Scheduler.Web.Services
         /// 暂停任务
         /// </summary>
         /// <param name="id"></param>
-        public void StopJob(int id)
+        public void PauseJob(int id)
         {
             try
             {
+                _schedulerContext.PauseJob(id);
 
-                // http://stackoverflow.com/questions/1933676/quartz-java-resuming-a-job-excecutes-it-many-times
-                // 恢复之后多次触发原因
-                _schedulerContext.Scheduler.PauseJob(new Quartz.JobKey(id.ToString(), "httpservice-job"));
-                _schedulerContext.Scheduler.PauseTrigger(new Quartz.TriggerKey(id.ToString(), "httpservice-trigger"));
+                var job = _jobInfoRepository.Get(id);
+                if (job != null)
+                    job.Enabled = false;
+
+                _jobInfoRepository.Update(job);
             }
             catch { }
         }

@@ -3,36 +3,32 @@ using JIF.Scheduler.Web.Models;
 using JIF.Scheduler.Web.Services;
 using Quartz;
 using Quartz.Impl;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace JIF.Scheduler.Web
 {
     public class SchedulerContext
     {
-        private JobInfoServices _jobInfoService;
-
         private IScheduler _scheduler;
 
-        public SchedulerContext(JobInfoServices jobInfoService)
-        {
-            _jobInfoService = jobInfoService;
-
-            Initialize();
-        }
-
-        private void Initialize()
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void Initialize()
         {
             if (Singleton<SchedulerContext>.Instance == null)
             {
                 Singleton<SchedulerContext>.Instance = this;
 
-                var jobs = _jobInfoService.GetAllEnabledJobs();
+                var jobService = EngineContext.Current.Resolve<JobInfoServices>();
+
+                var jobs = jobService.GetAllJobs();
 
                 if (jobs == null)
                     return;
 
                 ISchedulerFactory _schedFact = new StdSchedulerFactory();
 
-                // get a scheduler
+                // 创建 scheduler(调度) 对象, 并启动
                 _scheduler = _schedFact.GetScheduler();
                 _scheduler.Start();
 
@@ -47,34 +43,98 @@ namespace JIF.Scheduler.Web
                     ITrigger trigger = TriggerBuilder.Create()
                         .WithIdentity(j.Id.ToString(), "httpservice-trigger")
                         .WithCronSchedule(j.CronString, x => x
-                             .WithMisfireHandlingInstructionIgnoreMisfires())
+                             .WithMisfireHandlingInstructionDoNothing())
                         .Build();
 
                     _scheduler.ScheduleJob(job, trigger);
 
+                    if (!j.Enabled)
+                    {
+                        _scheduler.PauseJob(new JobKey(j.Id.ToString(), "httpservice-job"));
+                        _scheduler.PauseTrigger(new TriggerKey(j.Id.ToString(), "httpservice-trigger"));
+                    }
                 }
 
                 // setting recycling control
-                IJobDetail RecyclingJob = JobBuilder.Create<GCRecyclingJob>()
-                    .WithIdentity("GC.Collect", "recycling-job")
-                    .Build();
+                //addGCRecyclingJob();
 
-                ITrigger RecyclingTrigger = TriggerBuilder.Create()
-                    .WithIdentity("GC.Collect", "recycling-trigger")
-                    .WithSimpleSchedule(x => x
-                        .WithIntervalInMinutes(10))
-                    .Build();
-
-                _scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
             }
         }
 
-        public IScheduler Scheduler
+        /// <summary>
+        /// GC-Recycling Job
+        /// </summary>
+        private void addGCRecyclingJob()
         {
-            get
-            {
-                return _scheduler;
-            }
+
+            IJobDetail RecyclingJob = JobBuilder.Create<GCRecyclingJob>()
+                .WithIdentity("GC.Collect", "recycling-job")
+                .Build();
+
+            ITrigger RecyclingTrigger = TriggerBuilder.Create()
+                .WithIdentity("GC.Collect", "recycling-trigger")
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInMinutes(10))
+                .Build();
+
+            _scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
+        }
+
+        /// <summary>
+        /// 判断job 是否存在
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool ExistJob(int id)
+        {
+            return _scheduler.CheckExists(new JobKey(id.ToString(), "httpservice-job"));
+        }
+
+        /// <summary>
+        /// 重启暂停的 Job
+        /// </summary>
+        /// <param name="id">任务编号</param>
+        public void ResumeJob(int id)
+        {
+            _scheduler.ResumeJob(new JobKey(id.ToString(), "httpservice-job"));
+            _scheduler.ResumeTrigger(new TriggerKey(id.ToString(), "httpservice-trigger"));
+        }
+
+        /// <summary>
+        /// 暂停任务
+        /// </summary>
+        /// <param name="id"></param>
+        public void PauseJob(int id)
+        {
+            //// http://stackoverflow.com/questions/1933676/quartz-java-resuming-a-job-excecutes-it-many-times
+            //// 恢复之后多次触发原因, 未解决
+            _scheduler.PauseJob(new JobKey(id.ToString(), "httpservice-job"));
+            _scheduler.PauseTrigger(new TriggerKey(id.ToString(), "httpservice-trigger"));
+        }
+
+        /// <summary>
+        /// 启动所有任务
+        /// </summary>
+        public void StartJobs()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 停止调度程序
+        /// </summary>
+        public void Shutdown()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 停止调度程序
+        /// </summary>
+        /// <param name="waitForJobsToComplete"></param>
+        public void Shuedown(bool waitForJobsToComplete)
+        {
+            throw new NotImplementedException();
         }
     }
 }
