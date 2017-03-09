@@ -31,7 +31,11 @@ namespace JIF.Scheduler.Web
                 else
                 {
                     var referrer = context.RequestContext.HttpContext.Request.UrlReferrer.ToString();
+
+                    // viewbag 传递无效
+                    //context.Controller.ViewBag._JIFExceptionMessage = context.Exception.Message;
                     context.Controller.TempData["JIFExceptionMessage"] = context.Exception.Message;
+
                     context.Result = new RedirectResult(referrer);
                 }
 

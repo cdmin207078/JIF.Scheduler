@@ -60,7 +60,7 @@ namespace JIF.Scheduler.Web
 
 
             // Core Implements Dependency
-            builder.RegisterType<NLogger>().As<ILog>().SingleInstance();
+            builder.RegisterType<NLogger>().As<ILog>().InstancePerLifetimeScope();
 
             // Scheduler
             builder.RegisterType<SchedulerContainer>().SingleInstance();
