@@ -1094,7 +1094,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JIF.Scheduler.Core\JIF.Scheduler.Core.csproj">

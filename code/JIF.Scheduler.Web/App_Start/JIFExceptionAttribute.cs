@@ -24,7 +24,7 @@ namespace JIF.Scheduler.Web
                         {
                             success = false,
                             message = context.Exception.Message,
-                            date = DateTime.Now
+                            data = ""
                         }
                     };
                 }

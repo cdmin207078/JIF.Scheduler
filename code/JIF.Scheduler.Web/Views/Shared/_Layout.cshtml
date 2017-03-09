@@ -34,7 +34,7 @@
 
     <!-- ios-switch -->
     <link href="~/Content/ios-switch/switch.css" rel="stylesheet" />
-    
+
     <!-- custom styles -->
     @RenderSection("Styles", false)
 
@@ -97,6 +97,13 @@
         </div>
         <!-- /.content-wrapper -->
     </div>
+
+
+    @if (TempData["JIFExceptionMessage"] != null)
+    {
+        <div id="JIFExceptionMessage" style="display:none">@TempData["JIFExceptionMessage"]</div>
+    }
+
     <!-- ./wrapper -->
     <!-- jQuery 2.2.3 -->
     <script src="~/Content/AdminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
