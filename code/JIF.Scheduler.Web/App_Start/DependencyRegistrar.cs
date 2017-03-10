@@ -1,5 +1,8 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
+using Common.Logging;
+using Common.Logging.Configuration;
+using Common.Logging.NLog;
 using JIF.Scheduler.Core.Configuration;
 using JIF.Scheduler.Core.Data;
 using JIF.Scheduler.Core.Infrastructure;
@@ -60,7 +63,7 @@ namespace JIF.Scheduler.Web
 
 
             // Core Implements Dependency
-            builder.RegisterType<NLogger>().As<ILog>().InstancePerLifetimeScope();
+            builder.RegisterInstance(new NLogLoggerFactoryAdapter(new NameValueCollection()).GetLogger("")).As<ILog>().SingleInstance();
 
             // Scheduler
             builder.RegisterType<SchedulerContainer>().SingleInstance();

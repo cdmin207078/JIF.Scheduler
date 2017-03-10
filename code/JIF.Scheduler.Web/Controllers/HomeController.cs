@@ -27,6 +27,8 @@ namespace JIF.Scheduler.Web.Controllers
         {
             ViewBag.Job = _jobInfoService.Get(id);
 
+
+            
             return View();
         }
 

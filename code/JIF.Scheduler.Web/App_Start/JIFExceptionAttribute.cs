@@ -32,8 +32,9 @@ namespace JIF.Scheduler.Web
                 {
                     var referrer = context.RequestContext.HttpContext.Request.UrlReferrer.ToString();
 
-                    // viewbag 传递无效
-                    //context.Controller.ViewBag._JIFExceptionMessage = context.Exception.Message;
+                    // http://www.cnblogs.com/lindaWei/archive/2013/01/15/2860028.html - MVC3中 ViewBag、ViewData和TempData的使用和区别
+                    // http://www.cnblogs.com/tristanguo/archive/2009/04/06/1430062.html - Asp.Net Mvc: 浅析TempData机制
+                    //context.Controller.ViewBag._JIFExceptionMessage = context.Exception.Message;  -- 无效
                     context.Controller.TempData["JIFExceptionMessage"] = context.Exception.Message;
 
                     context.Result = new RedirectResult(referrer);

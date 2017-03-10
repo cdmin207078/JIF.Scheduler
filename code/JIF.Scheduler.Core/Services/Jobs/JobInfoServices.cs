@@ -11,8 +11,10 @@ namespace JIF.Scheduler.Core.Services.Jobs
 {
     public class JobInfoServices
     {
+
         private readonly IRepository<JobInfo> _jobInfoRepository;
         private readonly SchedulerContainer _schedulerContainer;
+
 
         public JobInfoServices(IRepository<JobInfo> jobInfoRepository,
             SchedulerContainer schedulerContainer)
@@ -110,7 +112,10 @@ namespace JIF.Scheduler.Core.Services.Jobs
 
                 _jobInfoRepository.Update(job);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                throw new JIFException("任务唤醒失败 - " + ex.Message);
+            }
         }
 
         /// <summary>
