@@ -1,4 +1,5 @@
-﻿using JIF.Scheduler.Core.Services.Jobs;
+﻿using JIF.Scheduler.Core.Domain;
+using JIF.Scheduler.Core.Services.Jobs;
 using JIF.Scheduler.Core.Services.Jobs.Dtos;
 using System;
 using System.Web.Mvc;
@@ -8,10 +9,13 @@ namespace JIF.Scheduler.Web.Controllers
     public class HomeController : BaseController
     {
         private JobInfoServices _jobInfoService;
+        private readonly SchedulerContainer _schedulerContainer;
 
-        public HomeController(JobInfoServices jobInfoService)
+        public HomeController(JobInfoServices jobInfoService,
+            SchedulerContainer schedulerContainer)
         {
             _jobInfoService = jobInfoService;
+            _schedulerContainer = schedulerContainer;
         }
 
         [HttpGet]
@@ -27,8 +31,6 @@ namespace JIF.Scheduler.Web.Controllers
         {
             ViewBag.Job = _jobInfoService.Get(id);
 
-
-            
             return View();
         }
 
@@ -39,6 +41,23 @@ namespace JIF.Scheduler.Web.Controllers
 
             return Detail(id);
         }
+
+        [HttpGet]
+        public ActionResult Add()
+        {
+            ViewBag.Job = new JobInfo();
+
+            return View("Detail");
+        }
+
+        [HttpPost]
+        public ActionResult Add(JobInfoUpdateInputModel model)
+        {
+            _jobInfoService.Add(model);
+
+            return RedirectToAction("Index");
+        }
+
 
         // 暂停单个 Job
         [HttpPost]

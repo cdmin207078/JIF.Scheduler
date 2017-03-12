@@ -14,6 +14,14 @@ namespace JIF.Scheduler.Core.Services.Jobs
     {
         private IScheduler _scheduler;
 
+        public IScheduler Scheduler
+        {
+            get
+            {
+                return _scheduler;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Initialize()
         {
@@ -80,6 +88,41 @@ namespace JIF.Scheduler.Core.Services.Jobs
                 .Build();
 
             _scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
+        }
+
+        /// <summary>
+        /// 新增调度任务
+        /// </summary>
+        public void AddScheduler(string id, string serviceUrl, string jobname, string cronExression)
+        {
+            IJobDetail job = JobBuilder.Create<HttpServiceJob>()
+                        .WithIdentity(id, "httpservice-job")
+                        .UsingJobData("ServiceUrl", serviceUrl)
+                        .UsingJobData("JobName", jobname)
+                        .Build();
+
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity(id, "httpservice-trigger")
+                .WithCronSchedule(cronExression, x => x
+                     .WithMisfireHandlingInstructionDoNothing())
+                .Build();
+
+            _scheduler.ScheduleJob(job, trigger);
+        }
+
+        /// <summary>
+        /// 修改调度任务
+        /// </summary>
+        public void UpdateScheduler(string id, string cronExression)
+        {
+            var tk = new TriggerKey(id, "httpservice-trigger");
+            var originTrigger = _scheduler.GetTrigger(tk);
+
+            var newTrigger = originTrigger.GetTriggerBuilder()
+                .WithCronSchedule(cronExression, x => x.WithMisfireHandlingInstructionDoNothing())
+                .Build();
+
+            _scheduler.RescheduleJob(tk, newTrigger);
         }
 
         /// <summary>

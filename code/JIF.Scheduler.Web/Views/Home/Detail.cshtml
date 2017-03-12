@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form action="/home/detail/@job.Id" method="post">
+        <form action='@(job.Id == 0 ?"/home/add": "/home/detail/"+job.Id)' method="post">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">

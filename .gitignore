@@ -9,6 +9,7 @@ obj/*
 packages/
 .vs/
 .vscode/
+PublishProfiles/
 
 # compiled files
 obj
