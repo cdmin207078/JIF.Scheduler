@@ -27,7 +27,7 @@ namespace JIF.Scheduler.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Detail(int id)
+        public ActionResult Detail(string id)
         {
             ViewBag.Job = _jobInfoService.Get(id);
 
@@ -35,7 +35,7 @@ namespace JIF.Scheduler.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Detail(int id, JobInfoUpdateInputModel model)
+        public ActionResult Detail(string id, JobInfoUpdateInputModel model)
         {
             _jobInfoService.Update(id, model);
 
@@ -58,10 +58,9 @@ namespace JIF.Scheduler.Web.Controllers
             return RedirectToAction("Index");
         }
 
-
         // 暂停单个 Job
         [HttpPost]
-        public JsonResult PauseJob(int id)
+        public JsonResult PauseJob(string id)
         {
             try
             {
@@ -77,7 +76,7 @@ namespace JIF.Scheduler.Web.Controllers
 
         // 启动单个 Job
         [HttpPost]
-        public JsonResult ResumeJob(int id)
+        public JsonResult ResumeJob(string id)
         {
             try
             {
@@ -101,6 +100,15 @@ namespace JIF.Scheduler.Web.Controllers
         public JsonResult ResumeAll()
         {
             return AjaxOk();
+        }
+
+        // 删除Job
+        [HttpPost]
+        public ActionResult Del(string id)
+        {
+            _jobInfoService.Delete(id);
+
+            return RedirectToAction("Index");
         }
     }
 }

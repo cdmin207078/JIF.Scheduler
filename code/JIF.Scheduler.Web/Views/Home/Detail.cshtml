@@ -8,11 +8,18 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form action='@(job.Id == 0 ?"/home/add": "/home/detail/"+job.Id)' method="post">
+        <form action='@( string.IsNullOrWhiteSpace(job.Id) ? "/home/add" : "/home/detail/" + job.Id)' method="post">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        <span class="text-muted">[任务]</span> - <b class="text-light-blue">@job.Name</b>
+                        @if (string.IsNullOrWhiteSpace(job.Id))
+                        {
+                            <span class="text-muted">新增任务</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">[任务] - </span><b class="text-light-blue">@job.Name</b>
+                        }
                     </h3>
                 </div>
 
@@ -21,7 +28,7 @@
 
                     <div class="form-group">
                         <label for="txtJobName">名称</label>
-                        <input type="text" class="form-control" id="txtJobName" name="Name" placeholder="任务名称" value="@job.Name">
+                        <input type="text" class="form-control" id="txtJobName" name="Name" placeholder="任务名称" value="@job.Name" required>
                     </div>
 
                     <div class="form-group">
@@ -31,21 +38,27 @@
 
                     <div class="form-group">
                         <label for="txtJobUrl">服务地址</label>
-                        <input type="url" class="form-control" id="txtJobUrl" name="ServiceUrl" placeholder="任务具体处理程序服务地址" value="@job.ServiceUrl">
+                        <input type="url" class="form-control" id="txtJobUrl" name="ServiceUrl" placeholder="任务具体处理程序服务地址" value="@job.ServiceUrl" required>
                     </div>
 
                     <div class="form-group">
                         <label for="txtCronString">cron-expression</label>
-                        <input type="text" class="form-control" id="txtCronString" name="CronString" placeholder="任务具体处理程序服务地址" value="@job.CronString">
+                        <input type="text" class="form-control" id="txtCronString" name="CronString" placeholder="任务具体处理程序服务地址" value="@job.CronString" required>
                     </div>
                 </div>
 
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary">保 存</button>
                 </div>
-
             </div>
         </form>
+
+        @if (!string.IsNullOrWhiteSpace(job.Id))
+        {
+            // 删除项目表单
+            @Html.Partial("__DeleteJob", job)
+        }
+
     </div>
 
     <div class="col-md-6">
@@ -57,5 +70,45 @@
 @section Scripts {
     <script type="text/javascript">
 
+        $(function () {
+
+            $('#txtDelJobName').bind('input propertychange', function () {
+                var val = $(this).val();
+                var jn = $('#btnDelJob').attr('data-j-name');
+
+                if (val == jn) {
+                    $('#btnDelJob').removeAttr('disabled');
+                } else {
+                    $('#btnDelJob').attr('disabled', 'disabled');
+                }
+            });
+
+
+            $('#btnDelJob').click(function () {
+
+                var jn = $('#btnDelJob').attr('data-j-name');
+
+                $.confirm({
+                    title: '提醒',
+                    content: '确认要删除 任务 : ' + '<b>' + jn + '</b>',
+                    type: 'red',
+                    buttons: {
+                        ok: {
+                            text: '确认删除',
+                            btnClass: 'btn-danger',
+                            action: function () {
+                                $('#form-del-job').submit();
+                            }
+                        },
+                        cancel: {
+                            text: '取消',
+                            action: function () { }
+                        }
+                    }
+                });
+
+                return false;
+            });
+        });
     </script>
 }

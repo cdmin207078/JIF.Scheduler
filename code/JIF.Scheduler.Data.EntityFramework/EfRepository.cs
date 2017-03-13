@@ -1,4 +1,5 @@
 ﻿
+using Common.Logging;
 using JIF.Scheduler.Core.Data;
 using JIF.Scheduler.Core.Domain;
 using System;
@@ -13,10 +14,13 @@ namespace JIF.Scheduler.Data.EntityFramework
     {
         private DbContext _context;
         private IDbSet<T> _entities;
+        private ILog _log;
 
-        public EfRepository(DbContext context)
+        public EfRepository(DbContext context,
+            ILog log)
         {
             _context = context;
+            _log = log;
         }
 
         /// <summary>
@@ -60,6 +64,7 @@ namespace JIF.Scheduler.Data.EntityFramework
                 this.Entities.Add(entity);
 
                 this._context.SaveChanges();
+
             }
             catch (DbEntityValidationException dbEx)
             {
@@ -85,6 +90,7 @@ namespace JIF.Scheduler.Data.EntityFramework
             }
             catch (DbEntityValidationException dbEx)
             {
+
                 throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }

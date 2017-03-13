@@ -489,6 +489,7 @@
     <Compile Include="App_Start\DependencyRegistrar.cs" />
     <Compile Include="App_Start\JIFExceptionAttribute.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -529,6 +530,7 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\Home\__CronExpressionsDoc.cshtml" />
+    <Content Include="Views\Home\__DeleteJob.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -538,6 +540,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JIF.Scheduler.Core\JIF.Scheduler.Core.csproj">

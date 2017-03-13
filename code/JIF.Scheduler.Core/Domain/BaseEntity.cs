@@ -10,7 +10,9 @@ namespace JIF.Scheduler.Core.Domain
 {
     public abstract partial class BaseEntity
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        /// <summary>
+        /// 主键 Guid
+        /// </summary>
+        public string Id { get; set; }
     }
 }

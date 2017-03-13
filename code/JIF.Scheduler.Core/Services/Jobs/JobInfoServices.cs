@@ -12,10 +12,8 @@ namespace JIF.Scheduler.Core.Services.Jobs
 {
     public class JobInfoServices
     {
-
         private readonly IRepository<JobInfo> _jobInfoRepository;
         private readonly SchedulerContainer _schedulerContainer;
-
 
         public JobInfoServices(IRepository<JobInfo> jobInfoRepository,
             SchedulerContainer schedulerContainer)
@@ -23,7 +21,6 @@ namespace JIF.Scheduler.Core.Services.Jobs
             _jobInfoRepository = jobInfoRepository;
             _schedulerContainer = schedulerContainer;
         }
-
 
         /// <summary>
         /// 获取所有可用Job
@@ -39,11 +36,10 @@ namespace JIF.Scheduler.Core.Services.Jobs
             return _jobInfoRepository.Table.ToList();
         }
 
-        public JobInfo Get(int id)
+        public JobInfo Get(string id)
         {
             return _jobInfoRepository.Get(id);
         }
-
 
         /// <summary>
         /// 新增Job
@@ -64,6 +60,7 @@ namespace JIF.Scheduler.Core.Services.Jobs
 
             var job = new JobInfo();
 
+            job.Id = Guid.NewGuid().ToString("N");
             job.Name = model.Name;
             job.Description = model.Description;
             job.ServiceUrl = model.ServiceUrl;
@@ -72,16 +69,16 @@ namespace JIF.Scheduler.Core.Services.Jobs
 
             _jobInfoRepository.Insert(job);
 
-            _schedulerContainer.AddScheduler(job.Id.ToString(), job.ServiceUrl, job.Name, job.CronString);
+            _schedulerContainer.AddScheduler(job.Id, job.ServiceUrl, job.Name, job.CronString);
         }
 
         /// <summary>
         /// 修改Job
         /// </summary>
-        public void Update(int id, JobInfoUpdateInputModel model)
+        public void Update(string id, JobInfoUpdateInputModel model)
         {
-            if (id <= 0)
-                throw new JIFException("Job 编号不正确");
+            if (string.IsNullOrWhiteSpace(id))
+                throw new JIFException("Job 编号不能为空");
 
             var job = Get(id);
             if (job == null)
@@ -105,7 +102,7 @@ namespace JIF.Scheduler.Core.Services.Jobs
 
             _jobInfoRepository.Update(job);
 
-            _schedulerContainer.UpdateScheduler(job.Id.ToString(), job.CronString);
+            _schedulerContainer.UpdateScheduler(job.Id, job.CronString);
         }
 
 
@@ -113,7 +110,7 @@ namespace JIF.Scheduler.Core.Services.Jobs
         /// 唤醒任务
         /// </summary>
         /// <param name="id"></param>
-        public void ResumeJob(int id)
+        public void ResumeJob(string id)
         {
             try
             {
@@ -136,7 +133,7 @@ namespace JIF.Scheduler.Core.Services.Jobs
         /// 暂停任务
         /// </summary>
         /// <param name="id"></param>
-        public void PauseJob(int id)
+        public void PauseJob(string id)
         {
             try
             {
@@ -149,6 +146,30 @@ namespace JIF.Scheduler.Core.Services.Jobs
                 _jobInfoRepository.Update(job);
             }
             catch { }
+        }
+
+        /// <summary>
+        /// 删除任务
+        /// </summary>
+        /// <param name="id">任务编号</param>
+        /// <param name="name">任务名称</param>
+        public void Delete(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new JIFException("任务编号不能为空");
+            }
+
+            var job = Get(id);
+
+            if (job == null)
+            {
+                throw new JIFException("任务 : " + id + " 不存在.");
+            }
+
+            _schedulerContainer.DeleteJob(id);
+
+            _jobInfoRepository.Delete(job);
         }
     }
 }

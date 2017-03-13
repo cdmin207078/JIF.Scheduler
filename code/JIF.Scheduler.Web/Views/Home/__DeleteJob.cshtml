@@ -1,0 +1,19 @@
+﻿@model JIF.Scheduler.Core.Domain.JobInfo
+
+<form id="form-del-job" action="/home/del/@Model.Id" method="post">
+    <div class="box box-danger">
+        <div class="box-header with-border">
+            <span class="text-muted">删除任务</span>
+        </div>
+        <div class="box-body">
+            <label for="txtCronString">任务名称</label>
+            <div class="input-group col-md-6">
+
+                <input type="text" id="txtDelJobName" class="form-control" placeholder="请输入任务名称: @Model.Name" required>
+                <span class="input-group-btn">
+                    <button href="javascript:;" id="btnDelJob" class="btn btn-danger" data-j-name="@Model.Name" disabled="disabled">删 除</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</form>

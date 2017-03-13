@@ -2,6 +2,7 @@
 using JIF.Scheduler.Core.Infrastructure;
 using Quartz;
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 
 namespace JIF.Scheduler.Core.Services.Jobs
@@ -24,13 +25,17 @@ namespace JIF.Scheduler.Core.Services.Jobs
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
                     HttpResponseMessage response = await httpClient.GetAsync(ServiceUrl);
 
                     response.EnsureSuccessStatusCode();
 
                     string resultStr = await response.Content.ReadAsStringAsync();
 
-                    _log.InfoFormat("ID:[{0}-{1}], Result - {2}", context.JobDetail.Key.Name, JobName, resultStr);
+                    sw.Stop();
+
+                    _log.InfoFormat("ID:[{0}-{1}], Result - {2}", context.JobDetail.Key.Name, string.Format("{0}ms", sw.ElapsedMilliseconds), resultStr);
                 };
 
             }

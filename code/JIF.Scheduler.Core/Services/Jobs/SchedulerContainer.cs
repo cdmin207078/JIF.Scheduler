@@ -45,13 +45,13 @@ namespace JIF.Scheduler.Core.Services.Jobs
                 foreach (var j in jobs)
                 {
                     IJobDetail job = JobBuilder.Create<HttpServiceJob>()
-                        .WithIdentity(j.Id.ToString(), "httpservice-job")
+                        .WithIdentity(j.Id, "httpservice-job")
                         .UsingJobData("ServiceUrl", j.ServiceUrl)
                         .UsingJobData("JobName", j.Name)
                         .Build();
 
                     ITrigger trigger = TriggerBuilder.Create()
-                        .WithIdentity(j.Id.ToString(), "httpservice-trigger")
+                        .WithIdentity(j.Id, "httpservice-trigger")
                         .WithCronSchedule(j.CronString, x => x
                              .WithMisfireHandlingInstructionDoNothing())
                         .Build();
@@ -60,14 +60,14 @@ namespace JIF.Scheduler.Core.Services.Jobs
 
                     if (!j.Enabled)
                     {
-                        _scheduler.PauseJob(new JobKey(j.Id.ToString(), "httpservice-job"));
-                        _scheduler.PauseTrigger(new TriggerKey(j.Id.ToString(), "httpservice-trigger"));
+                        _scheduler.PauseJob(new JobKey(j.Id, "httpservice-job"));
+                        _scheduler.PauseTrigger(new TriggerKey(j.Id, "httpservice-trigger"));
                     }
 
                 }
 
                 // setting recycling control
-                //addGCRecyclingJob();
+                addGCRecyclingJob();
             }
         }
 
@@ -84,7 +84,8 @@ namespace JIF.Scheduler.Core.Services.Jobs
             ITrigger RecyclingTrigger = TriggerBuilder.Create()
                 .WithIdentity("GC.Collect", "recycling-trigger")
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInMinutes(10))
+                    .WithIntervalInMinutes(1)
+                    .RepeatForever())
                 .Build();
 
             _scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
@@ -130,31 +131,31 @@ namespace JIF.Scheduler.Core.Services.Jobs
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool ExistJob(int id)
+        public bool ExistJob(string id)
         {
-            return _scheduler.CheckExists(new JobKey(id.ToString(), "httpservice-job"));
+            return _scheduler.CheckExists(new JobKey(id, "httpservice-job"));
         }
 
         /// <summary>
         /// 重启暂停的 Job
         /// </summary>
         /// <param name="id">任务编号</param>
-        public void ResumeJob(int id)
+        public void ResumeJob(string id)
         {
-            _scheduler.ResumeJob(new JobKey(id.ToString(), "httpservice-job"));
-            _scheduler.ResumeTrigger(new TriggerKey(id.ToString(), "httpservice-trigger"));
+            _scheduler.ResumeJob(new JobKey(id, "httpservice-job"));
+            _scheduler.ResumeTrigger(new TriggerKey(id, "httpservice-trigger"));
         }
 
         /// <summary>
         /// 暂停任务
         /// </summary>
         /// <param name="id"></param>
-        public void PauseJob(int id)
+        public void PauseJob(string id)
         {
             // http://stackoverflow.com/questions/1933676/quartz-java-resuming-a-job-excecutes-it-many-times
             // 恢复之后多次触发原因, 未解决
-            _scheduler.PauseJob(new JobKey(id.ToString(), "httpservice-job"));
-            _scheduler.PauseTrigger(new TriggerKey(id.ToString(), "httpservice-trigger"));
+            _scheduler.PauseJob(new JobKey(id, "httpservice-job"));
+            _scheduler.PauseTrigger(new TriggerKey(id, "httpservice-trigger"));
         }
 
         /// <summary>
@@ -180,6 +181,15 @@ namespace JIF.Scheduler.Core.Services.Jobs
         public void Shuedown(bool waitForJobsToComplete)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 删除任务
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteJob(string id)
+        {
+            _scheduler.DeleteJob(new JobKey(id, "httpservice-job"));
         }
     }
 }
