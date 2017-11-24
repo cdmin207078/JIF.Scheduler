@@ -88,7 +88,7 @@ namespace JIF.Scheduler.Core.Services.Jobs
                     .RepeatForever())
                 .Build();
 
-            _scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
+            //_scheduler.ScheduleJob(RecyclingJob, RecyclingTrigger);
         }
 
         /// <summary>
@@ -142,6 +142,9 @@ namespace JIF.Scheduler.Core.Services.Jobs
         /// <param name="id">任务编号</param>
         public void ResumeJob(string id)
         {
+            // http://stackoverflow.com/questions/1933676/quartz-java-resuming-a-job-excecutes-it-many-times
+            // 恢复之后多次触发原因, 未解决
+
             _scheduler.ResumeJob(new JobKey(id, "httpservice-job"));
             _scheduler.ResumeTrigger(new TriggerKey(id, "httpservice-trigger"));
         }
@@ -154,6 +157,7 @@ namespace JIF.Scheduler.Core.Services.Jobs
         {
             // http://stackoverflow.com/questions/1933676/quartz-java-resuming-a-job-excecutes-it-many-times
             // 恢复之后多次触发原因, 未解决
+
             _scheduler.PauseJob(new JobKey(id, "httpservice-job"));
             _scheduler.PauseTrigger(new TriggerKey(id, "httpservice-trigger"));
         }
